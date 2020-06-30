@@ -12,14 +12,8 @@ from object_detection.utils import visualization_utils as vis_util
 # Change 0 only if you have more than one webcams.
 cap = cv2.VideoCapture(0)
 
-# Path to frozen detection graph.
-# This is the actual model that is used for the object detection.
-# PATH_TO_CKPT = os.path.join(
-#     os.path.abspath(os.getcwd()),
-#     'workspace\\training-demo\\trained-inference-graphs\\'
-#     'output_inference_graph_v1.pb'
-# )
-PATH_TO_CKPT = r'C:\drive\code\python\gestures-2\workspace\training-demo\trained-inference-graphs\output_inference_graph_v1.pb\frozen_inference_graph.pb'
+
+PATH_TO_CKPT 'workspace/training-demo/trained-inference-graphs/output_inference_graph_v1.pb/frozen_inference_graph.pb'
 
 # List of the strings that is used to add correct label for each box.
 PATH_TO_LABELS = 'workspace/training-demo/annotations/label-map.pbtxt'
