@@ -154,8 +154,82 @@ item {
 ```
 
 > **_ВАЖНО:_** Названия меток должны быть теми же, что и при разметке изображений в labelImg.
+> **_ВАЖНО:_** Иденитификаторы обязательно должны начинаться с 1, а не с 0.
 
 
+# Создание TensorFlow Records
 
+1. Преобразовать файлы `xml` в два файла `csv`.
 
+Из папки `scripts` этого репозитария запустить утилиту `xml2csv.py` для тестового и тренировочного датасетов:
+
+```
+python3 xml2csv.py -i ../workspace/training-demo/images/train -o ../workspace/training-demo/annotations/train-labels.csv
+python3 xml2csv.py -i ../workspace/training-demo/images/test -o ../workspace/training-demo/annotations/test-labels.csv
+```
+
+2. Преобразовать файлы `csv` в `record`.
+
+Из папки `scripts` этого репозитария запустить утилиту `generate-tfrecord.py`:
+
+```
+python3 generate-tfrecord.py --label0=one_finger --label1=two_fingers --csv_input=../workspace/training-demo/annotations/train-labels.csv --output_path=../workspace/training-demo/annotations/train.record --img_path=../workspace/training-demo/images/train
+python3 generate-tfrecord.py --label0=one_finger --label1=two_fingers --csv_input=../workspace/training-demo/annotations/test-labels.csv --output_path=../workspace/training-demo/annotations/test.record --img_path=../workspace/training-demo/images/test
+```
+
+> **_ВАЖНО:_** Заменить `--label0=one_finger --label1=two_fingers` на свои метки.
+
+Если будет больше двух классов меток, в файле `generate-tfrecord.py` изменить строки, начиная с 44:
+
+```
+# TO-DO replace this with label map
+# for multiple labels add more else if statements.
+def class_text_to_int(row_label):
+    if row_label == FLAGS.label0:
+        return 1
+    elif row_label == FLAGS.label1:
+        return 2
+```
+
+# Настроить Training Pipeline
+
+1. Существует большое количество предаварительно натренированных моделей распознавания объектов. Свою модель мы будем строить на основании существующей. Единственная проблема: таких моделей очень много, отличаются они скоростью и точностью обучения. Посмотерть какие бывают модели и их параметры можно вот [здесь](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md). В данном примере будет использоваться `ssd_inception_v2_coco`.
+
+2. Скачиваем модель в формате `*.tar.gz` [отсюда](http://download.tensorflow.org/models/object_detection/ssd_inception_v2_coco_2018_01_28.tar.gz) и распаковываем в директорию `workspace\training-demo\pre-trained-model`.
+
+3. В директории `workspace\training-demo\training` уже лежит файл конфигурации для этой модели `ssd_inception_v2_coco.config`. Заготовка этого файла скачивается [отсюда](https://github.com/tensorflow/models/blob/master/research/object_detection/samples/configs/ssd_inception_v2_coco.config).
+
+В файле важными явлюятся строки
+
+* 9 -- num_classes: 2 -- Задает количество классов
+* 77 -- type: 'ssd_inception_v2' -- Тип модели (именно так, без `coco` в конце)
+* 136 -- batch_size: 12 -- Этот безразмерный параметр отвечает за использование ОЗУ, его можно увеличивать или уменьшать в зависимости от использованной памяти во время обучения. Значение 12 дало примерно 10 ГБ из 16 ГБ
+* 151 -- fine_tune_checkpoint: "pre-trained-model/model.ckpt" -- Путь к файлам предварительно натренированной модели (которую скачали выше)
+* 168+
+
+```
+train_input_reader: {
+    tf_record_input_reader {
+        input_path: "annotations/train.record" # Path to training TFRecord file
+    }
+    label_map_path: "annotations/label-map.pbtxt" # Path to label map file
+}
+```
+
+Пути файл `record` для тренировачного датасета и файлу с классами объектов
+
+* 187+
+
+```
+eval_input_reader: {
+    tf_record_input_reader {
+        input_path: "annotations/test.record" # Path to testing TFRecord
+    }
+    label_map_path: "annotations/label_map.pbtxt" # Path to label map file
+    shuffle: false
+    num_readers: 1
+}
+```
+
+Тоже самое для тестового датасета
 
