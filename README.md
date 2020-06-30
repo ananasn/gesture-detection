@@ -210,9 +210,9 @@ def class_text_to_int(row_label):
 ```
 train_input_reader: {
     tf_record_input_reader {
-        input_path: "annotations/train.record" # Path to training TFRecord file
+        input_path: "annotations/train.record"
     }
-    label_map_path: "annotations/label-map.pbtxt" # Path to label map file
+    label_map_path: "annotations/label-map.pbtxt"
 }
 ```
 
@@ -223,9 +223,9 @@ train_input_reader: {
 ```
 eval_input_reader: {
     tf_record_input_reader {
-        input_path: "annotations/test.record" # Path to testing TFRecord
+        input_path: "annotations/test.record"
     }
-    label_map_path: "annotations/label_map.pbtxt" # Path to label map file
+    label_map_path: "annotations/label-map.pbtxt"
     shuffle: false
     num_readers: 1
 }
@@ -233,3 +233,38 @@ eval_input_reader: {
 
 Тоже самое для тестового датасета
 
+# Тренировка модели
+
+1. Из директории `workspace/training-demo` запустить файл `model_main.py`.
+
+> **_ВАЖНО:_** Он там уже есть, но вообще просто копируется из `models/research/object_detection`
+
+```
+python3 model_main.py --alsologtostderr --model_dir=training/ --pipeline_config_path=training/ssd_inception_v2_coco.config
+```
+
+Обучение началось!!! В консоле практически ничего интересного происходить не будет, только процесс начнет потреблять ресурсы. Процесс небыстрый, в конфигурации, в строке 157 стоит ограничение в 200000 шагов. На Core i5 8400 и GTX 1050 за 16 часов прошло только 50000 шагов на датасете из 45 изображений для двух классов. Хорошая новость: процесс всегда можно прервать по `CTRL+C`, а потом запусить с этого же места этой же командой.
+
+2. Наблюдаем за процессом обучения.
+
+```
+tensorboard --logdir=training\
+```
+
+Открываем в браузере адрес `http://localhost:6006` и видим много графиков, а также распознанные изображения из тестового датасета. Самый вайжный параметр -- `total_loss`, он должен уменьшаться и стремиться к 1--2. Последнее означает, что обучение идет правильно, в противном случае, надо изменить датасет. Значения меньше 1 тоже не очень хороший показатель, они означают, что произошло переобучение и сеть будет находить объекты там, где их нет.
+
+# Получение файл замороженной модели
+
+1. В директории `training_demo/training` найти файл `model.ckpt-*` с максимальным номером.
+
+2. Из директории `workspace/training-demo` запустить файл `export_inference_graph.py`
+
+> **_ВАЖНО:_** Он там уже есть, но вообще просто копируется из `models/research/object_detection`
+
+python3 export_inference_graph.py --input_type image_tensor --pipeline_config_path training/ssd_inception_v2_coco.config --trained_checkpoint_prefix training/model.ckpt-50802 --output_directory trained-inference-graphs/output_inference_graph_v1.pb
+
+> **_ВАЖНО:_** Директория `trained-inference-graphs` создается автоматически и при повторном запуске этой команды, ее надо удалять
+
+# Проверка работы модели с вебкамеров
+
+Из корня этого репозитария запускаме файл `webcam.py`.
