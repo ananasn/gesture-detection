@@ -11,7 +11,7 @@ sudo apt-get update
 sudo apt-get install python3.7
 ```
 
-**Возможно придется изменить симлинк на python3**
+> **_ВАЖНО:_** Возможно придется изменить симлинк на python3
 
 2. Установить TensorFlow 1.13.
 
@@ -19,7 +19,7 @@ sudo apt-get install python3.7
 pip3 install --ignore-installed --upgrade tensorflow==1.13
 ```
 
-__Если потребуется переустановка, пакеты вначале удалять, иначе будет две разные версии пакета! Например:__
+> **_ВАЖНО:_** Если потребуется переустановка, пакеты вначале удалять, иначе будет две разные версии пакета! Например:
 
 ```
 pip3 uninstall tensorflow
@@ -36,9 +36,9 @@ sess = tf.Session()
 print(sess.run(hello))
 ```
 
-__Возможно, будут выведены какие-то предупреждения, но если они с символом I, то все нормально__
+> **_ВАЖНО:_** Возможно, будут выведены какие-то предупреждения, но если они с символом I, то все нормально
 
-#Установка TensorFlow для GPU (для обучения модели)
+# Установка TensorFlow для GPU (для обучения модели)
 
 1. Установить CUDA Toolkit 10.0.
 
@@ -58,6 +58,65 @@ __Возможно, будут выведены какие-то предупре
 export PATH=/usr/local/cuda-10.0/bin${PATH:+:${PATH}}
 export LD_LIBRARY_PATH=/usr/local/cuda-10.0/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 ```
+
+4. Установить TensorFlow GPU 1.13.
+
+```
+pip3 install --ignore-installed --upgrade tensorflow-gpu==1.13
+```
+
+5. Аналогично версии для CPU проверяем работоспособность, на этот раз вывод будет более подробным и в нем тоже должны быть только предупреждения с символом I:
+
+```
+2020-06-28 19:39:57.763993: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1512] Adding visible gpu devices: 0
+2020-06-28 19:39:57.767488: I tensorflow/core/common_runtime/gpu/gpu_device.cc:984] Device interconnect StreamExecutor with strength 1 edge matrix:
+2020-06-28 19:39:57.771466: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990]      0
+2020-06-28 19:39:57.774334: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1003] 0:   N
+2020-06-28 19:39:57.776874: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 3009 MB memory) -> physical GPU (device: 0, name: GeForce GTX 1050, pci bus id: 0000:01:00.0, compute capability: 6.1)
+```
+
+# Установка моделей обучения для TensorFlow
+
+1. В данном примере используются модели версии 1.13, все необходимые файлы уже лежат в этом репозитарии в папке `models`. В случае необходимости скачать их можно [отсюда](https://github.com/tensorflow/models/releases/tag/v1.13.0)
+
+2. Установить необходимые для обучения пакеты
+
+```
+pip3 install --ignore-installed --upgrade pillow==6.2.1
+pip3 install --ignore-installed --upgrade lxml==4.4.1
+pip3 install --ignore-installed --upgrade jupyter==1.0.0
+pip3 install --ignore-installed --upgrade matplotlib==3.1.1
+pip3 install --ignore-installed --upgrade opencv-python==3.4.2.17
+pip3 install --ignore-installed --upgrade pathlib==1.0.1
+pip3 install --ignore-installed --upgrade numpy==1.16
+```
+
+3. Установить Protocol Buffer.
+
+```
+sudo add-apt-repository ppa:maarten-fonville/protobuf
+sudo apt update
+sudo apt protoc
+```
+
+4. Перейти в директорию `models/research/` и выполнить команду:
+
+```
+protoc object_detection/protos/*.proto --python_out=.
+```
+
+для компиляции файлов protobuf (они там уже есть скомпилированные, но возможно понядобится сделать это еще раз).
+
+5. Установить пакет `object_detection`.
+
+Перейти в директорию `models\research\object_detection` и выполнить команду `pip install .`
+
+6. Добвить пакет `slim` в `PYTHONPATH`. В `~\.bashrc` добавить следующие строки, перезапустить сессию (сделать logout или закрыть эмулятор терминала).
+
+```
+export PYTHONPATH=$PYTHONPATH:<ПУТЬ_К_ЭТОМУ_РЕПОЗИТАРИЮ>/models/research/slim
+```
+
 
 
 
