@@ -13,7 +13,7 @@
 
 ```
 conda create -n tensorflow_cpu
-activate tensorflow_cpu
+conda activate tensorflow_cpu
 ```
 
 2. Установить TensorFlow 1.13
@@ -68,10 +68,12 @@ export PATH=/usr/local/cuda-10.0/bin${PATH:+:${PATH}}
 export LD_LIBRARY_PATH=/usr/local/cuda-10.0/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 ```
 
-4. Установить TensorFlow GPU 1.13.
+4. Создаем отдельное виртуальное окружение и устанавливаем TensorFlow GPU 1.13.
 
 ```
-pip3 install --ignore-installed --upgrade tensorflow-gpu==1.13
+conda create -n tensorflow_gpu
+conda activate tensorflow_gpu
+conda install tensorflow-gpu==1.13
 ```
 
 5. Аналогично версии для CPU проверяем работоспособность, на этот раз вывод будет более подробным и в нем тоже должны быть только предупреждения с символом I:
