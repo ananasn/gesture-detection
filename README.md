@@ -12,6 +12,9 @@ sudo apt-get install python3.7
 ```
 
 > **_ВАЖНО:_** Возможно придется изменить симлинк на python3
+```
+sudo ln -sf python3.7 /usr/bin/python
+```
 
 2. Установить TensorFlow 1.13.
 
