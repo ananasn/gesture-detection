@@ -16,17 +16,10 @@ conda create -n tensorflow_cpu
 activate tensorflow_cpu
 ```
 
-2. Установить TensorFlow 1.13.
+2. Установить TensorFlow 1.13
 
 ```
-pip3 install --ignore-installed --upgrade tensorflow==1.13.2
-```
-
-> **_ВАЖНО:_** Если потребуется переустановка, пакеты вначале удалять, иначе будет две разные версии пакета! Например:
-
-```
-pip3 uninstall tensorflow
-pip3 install --ignore-installed --upgrade tensorflow==1.13.2
+conda install numpy=1.16 tensorflow=1.13
 ```
 
 3. Проверяем работу.
@@ -39,7 +32,13 @@ sess = tf.Session()
 print(sess.run(hello))
 ```
 
-> **_ВАЖНО:_** Возможно, будут выведены какие-то предупреждения, но если они с символом I, то все нормально
+> **_ВАЖНО:_** Возможно, будут выведены какие-то предупреждения, но если они с символом Info, то все нормально
+
+4. Деактивировать виртуальное окружение
+
+```
+conda deactivate
+```
 
 # Установка TensorFlow для GPU (для обучения модели)
 
