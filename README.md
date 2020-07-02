@@ -2,21 +2,18 @@
 
 # Установка Anaconda для Python 3.7
 
-1. Установить Anaconda для Python 3.7
+1. Скачать Anaconda Python 3.7 [отсюда](https://repo.anaconda.com/archive/Anaconda3-2018.12-Linux-x86_64.sh).
+2. Запусить исполняемый файл `*.sh` и выполнить инструкции устновщика. [Здесь](https://docs.anaconda.com/anaconda/install/linux/) есть подробная информация по установке.
+3. В ответ на вопрос "Do you wish the installer to prepend the Anaconda<2 or 3> install location to PATH in your /home/<user>/.bashrc ?", ответить «Да». Если ввести «Нет», можно будет потом вручную добавить путь к Anaconda, иначе команда conda не будет работать.
+4. Сделать source .bashrc или перезапустить терминал.
 
 # Установка TensorFlow для CPU (это для работы уже с готовой моделью)
 
-
+1. Cоздаем виртуальное окружение и активируем его
 
 ```
-sudo add-apt-repository ppa:deadsnakes/ppa
-sudo apt-get update
-sudo apt-get install python3.7
-```
-
-> **_ВАЖНО:_** Возможно придется изменить симлинк на python3
-```
-sudo ln -sf python3.7 /usr/bin/python
+conda create -n tensorflow_cpu
+activate tensorflow_cpu
 ```
 
 2. Установить TensorFlow 1.13.
