@@ -129,8 +129,10 @@ export PYTHONPATH=$PYTHONPATH:<ПУТЬ_К_ЭТОМУ_РЕПОЗИТАРИЮ>/mo
 
 7. Установить утилиту для разметки изображений LabelImg
 
+Скачать вот [отсюда](http://tzutalin.github.io/labelImg/) и запустить:
+
 ```
-pip install labelImg
+./labelImg
 ```
 
 # Подготовка и разметка датасета
@@ -144,7 +146,7 @@ pip install labelImg
 4. Из папки `scripts` этого репозитария запустить утилиту разбиения датасета на тренировочный и тестовый:
 
 ```
-python3 partition-dataset.py -x -i ../workspace/training_demo/images -r 0.1
+python partition-dataset.py -x -i ../workspace/training_demo/images -r 0.1
 ```
 
 В директории `workspace\training-demo\images` автоматически создадуться две поддиректории `train` и `test`. В первую будет помещено 90% фотографий с xml аннотациями, а во вторую -- 10%. Последний аргумент в команде задает это отношение.
@@ -175,8 +177,8 @@ item {
 Из папки `scripts` этого репозитария запустить утилиту `xml2csv.py` для тестового и тренировочного датасетов:
 
 ```
-python3 xml2csv.py -i ../workspace/training-demo/images/train -o ../workspace/training-demo/annotations/train-labels.csv
-python3 xml2csv.py -i ../workspace/training-demo/images/test -o ../workspace/training-demo/annotations/test-labels.csv
+python xml2csv.py -i ../workspace/training-demo/images/train -o ../workspace/training-demo/annotations/train-labels.csv
+python xml2csv.py -i ../workspace/training-demo/images/test -o ../workspace/training-demo/annotations/test-labels.csv
 ```
 
 2. Преобразовать файлы `csv` в `record`.
@@ -184,8 +186,8 @@ python3 xml2csv.py -i ../workspace/training-demo/images/test -o ../workspace/tra
 Из папки `scripts` этого репозитария запустить утилиту `generate-tfrecord.py`:
 
 ```
-python3 generate-tfrecord.py --label0=one_finger --label1=two_fingers --csv_input=../workspace/training-demo/annotations/train-labels.csv --output_path=../workspace/training-demo/annotations/train.record --img_path=../workspace/training-demo/images/train
-python3 generate-tfrecord.py --label0=one_finger --label1=two_fingers --csv_input=../workspace/training-demo/annotations/test-labels.csv --output_path=../workspace/training-demo/annotations/test.record --img_path=../workspace/training-demo/images/test
+python generate-tfrecord.py --label0=one_finger --label1=two_fingers --csv_input=../workspace/training-demo/annotations/train-labels.csv --output_path=../workspace/training-demo/annotations/train.record --img_path=../workspace/training-demo/images/train
+python generate-tfrecord.py --label0=one_finger --label1=two_fingers --csv_input=../workspace/training-demo/annotations/test-labels.csv --output_path=../workspace/training-demo/annotations/test.record --img_path=../workspace/training-demo/images/test
 ```
 
 > **_ВАЖНО:_** Заменить `--label0=one_finger --label1=two_fingers` на свои метки.
@@ -251,7 +253,7 @@ eval_input_reader: {
 > **_ВАЖНО:_** Он там уже есть, но вообще просто копируется из `models/research/object_detection`
 
 ```
-python3 model_main.py --alsologtostderr --model_dir=training/ --pipeline_config_path=training/ssd_inception_v2_coco.config
+python model_main.py --alsologtostderr --model_dir=training/ --pipeline_config_path=training/ssd_inception_v2_coco.config
 ```
 
 Обучение началось!!! В консоле практически ничего интересного происходить не будет, только процесс начнет потреблять ресурсы. Процесс небыстрый, в конфигурации, в строке 157 стоит ограничение в 200000 шагов. На Core i5 8400 и GTX 1050 за 16 часов прошло только 50000 шагов на датасете из 45 изображений для двух классов. Хорошая новость: процесс всегда можно прервать по `CTRL+C`, а потом запусить с этого же места этой же командой.
@@ -272,7 +274,9 @@ tensorboard --logdir=training\
 
 > **_ВАЖНО:_** Он там уже есть, но вообще просто копируется из `models/research/object_detection`
 
-python3 export_inference_graph.py --input_type image_tensor --pipeline_config_path training/ssd_inception_v2_coco.config --trained_checkpoint_prefix training/model.ckpt-50802 --output_directory trained-inference-graphs/output_inference_graph_v1.pb
+```
+python export_inference_graph.py --input_type image_tensor --pipeline_config_path training/ssd_inception_v2_coco.config --trained_checkpoint_prefix training/model.ckpt-50802 --output_directory trained-inference-graphs/output_inference_graph_v1.pb
+```
 
 > **_ВАЖНО:_** Директория `trained-inference-graphs` создается автоматически и при повторном запуске этой команды, ее надо удалять
 
