@@ -42,7 +42,7 @@ conda deactivate
 
 # Установка TensorFlow для GPU (для обучения модели)
 
-1. Установить CUDA Toolkit 10.0 (убедиться, что драйверы для nvidia установлены, для Ubuntu 18.04 -- версия 340).
+1. Установить CUDA Toolkit 10.0 (убедиться, что драйверы для nvidia установлены, для Ubuntu 18.04 -- версия 410).
 
 Скачать и установить [отcюда.](https://developer.nvidia.com/cuda-10.0-download-archive?target_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=1804&target_type=deblocal)
 
@@ -73,7 +73,7 @@ export LD_LIBRARY_PATH=/usr/local/cuda-10.0/lib64${LD_LIBRARY_PATH:+:${LD_LIBRAR
 ```
 conda create -n tensorflow_gpu
 conda activate tensorflow_gpu
-conda install tensorflow-gpu==1.13
+conda install numpy=1.16 tensorflow-gpu=1.13
 ```
 
 5. Аналогично версии для CPU проверяем работоспособность, на этот раз вывод будет более подробным и в нем тоже должны быть только предупреждения с символом I:
