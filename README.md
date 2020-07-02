@@ -19,14 +19,14 @@ sudo ln -sf python3.7 /usr/bin/python
 2. Установить TensorFlow 1.13.
 
 ```
-pip3 install --ignore-installed --upgrade tensorflow==1.13
+pip3 install --ignore-installed --upgrade tensorflow==1.13.2
 ```
 
 > **_ВАЖНО:_** Если потребуется переустановка, пакеты вначале удалять, иначе будет две разные версии пакета! Например:
 
 ```
 pip3 uninstall tensorflow
-pip3 install --ignore-installed --upgrade tensorflow==1.13
+pip3 install --ignore-installed --upgrade tensorflow==1.13.2
 ```
 
 3. Проверяем работу.
