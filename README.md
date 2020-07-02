@@ -93,13 +93,12 @@ conda install numpy=1.16 tensorflow-gpu=1.13
 2. Установить необходимые для обучения пакеты
 
 ```
-pip3 install --ignore-installed --upgrade pillow==6.2.1
-pip3 install --ignore-installed --upgrade lxml==4.4.1
-pip3 install --ignore-installed --upgrade jupyter==1.0.0
-pip3 install --ignore-installed --upgrade matplotlib==3.1.1
-pip3 install --ignore-installed --upgrade opencv-python==3.4.2.17
-pip3 install --ignore-installed --upgrade pathlib==1.0.1
-pip3 install --ignore-installed --upgrade numpy==1.16
+conda install pillow==6.2.1
+conda install lxml==4.4.1
+conda install jupyter==1.0.0
+conda install matplotlib==3.1.1
+conda install opencv==3.4.2
+conda install pathlib==1.0.1
 ```
 
 3. Установить Protocol Buffer.
