@@ -1,11 +1,11 @@
-> **_ВАЖНО:_** Все компоненты очень чувствительны к версиям, поэтому необходимо использовать только указанные версии!
+> **_ВАЖНО:_** Все компоненты очень чувствительны к версиям, поэтому необходимо использовать только указанные версии! Установка производилать под ОС Ubuntu 18.04.
 
 # Установка Anaconda для Python 3.7
 
 1. Скачать Anaconda Python 3.7 [отсюда](https://repo.anaconda.com/archive/Anaconda3-2018.12-Linux-x86_64.sh).
 2. Запусить исполняемый файл `*.sh` и выполнить инструкции устновщика. [Здесь](https://docs.anaconda.com/anaconda/install/linux/) есть подробная информация по установке.
-3. В ответ на вопрос "Do you wish the installer to prepend the Anaconda<2 or 3> install location to PATH in your /home/<user>/.bashrc ?", ответить «Да». Если ввести «Нет», можно будет потом вручную добавить путь к Anaconda, иначе команда conda не будет работать.
-4. Сделать source .bashrc или перезапустить терминал.
+3. В ответ на вопрос "Do you wish the installer to prepend the Anaconda<2 or 3> install location to PATH in your /home/<user>/.bashrc ?", ответить "yes". Если ввести "no", можно будет потом вручную добавить путь к Anaconda, иначе команда conda не будет работать.
+4. Сделать `source .bashrc` или перезапустить терминал.
 
 # Установка TensorFlow для CPU (это для работы уже с готовой моделью)
 
@@ -42,7 +42,7 @@ conda deactivate
 
 # Установка TensorFlow для GPU (для обучения модели)
 
-1. Установить CUDA Toolkit 10.0.
+1. Установить CUDA Toolkit 10.0 (убедиться, что драйверы для nvidia установлены, для Ubuntu 18.04 -- версия 340).
 
 Скачать и установить [отcюда.](https://developer.nvidia.com/cuda-10.0-download-archive?target_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=1804&target_type=deblocal)
 
