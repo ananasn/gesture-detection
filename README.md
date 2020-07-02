@@ -1,9 +1,12 @@
 > **_ВАЖНО:_** Все компоненты очень чувствительны к версиям, поэтому необходимо использовать только указанные версии!
 
+# Установка Anaconda для Python 3.7
+
+1. Установить Anaconda для Python 3.7
 
 # Установка TensorFlow для CPU (это для работы уже с готовой моделью)
 
-1. Установить Python 3.7.
+
 
 ```
 sudo add-apt-repository ppa:deadsnakes/ppa
@@ -46,6 +49,15 @@ print(sess.run(hello))
 1. Установить CUDA Toolkit 10.0.
 
 Скачать и установить [отcюда.](https://developer.nvidia.com/cuda-10.0-download-archive?target_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=1804&target_type=deblocal)
+
+```
+sudo dpkg -i cuda-repo-ubuntu1804-10-0-local-10.0.130-410.48_1.0-1_amd64.deb
+sudo apt-key add /var/cuda-repo-10-0-local-10.0.130-410.48/7fa2af80.pub
+sudo apt update
+sudo apt install freeglut3 freeglut3-dev libxi-dev libxmu-dev
+sudo apt install cuda
+```
+
 
 2. Установить CUDNN.
 
