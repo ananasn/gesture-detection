@@ -1,5 +1,9 @@
+import time
+
 import numpy as np
 import os
+
+import requests
 import six.moves.urllib as urllib
 import tarfile
 import tensorflow as tf
@@ -13,7 +17,7 @@ from object_detection.utils import visualization_utils as vis_util
 cap = cv2.VideoCapture(0)
 
 
-PATH_TO_CKPT 'workspace/training-demo/trained-inference-graphs/output_inference_graph_v1.pb/frozen_inference_graph.pb'
+PATH_TO_CKPT = 'workspace/training-demo/trained-inference-graphs/output_inference_graph_v1.pb/frozen_inference_graph.pb'
 
 # List of the strings that is used to add correct label for each box.
 PATH_TO_LABELS = 'workspace/training-demo/annotations/label-map.pbtxt'
@@ -21,6 +25,8 @@ PATH_TO_LABELS = 'workspace/training-demo/annotations/label-map.pbtxt'
 # Number of classes to detect
 NUM_CLASSES = 2
 
+THRESHOLD = 0.9
+SLEEP_TIME = 0.5
 
 # Load a (frozen) Tensorflow model into memory.
 detection_graph = tf.Graph()
@@ -70,7 +76,7 @@ with detection_graph.as_default():
             scores = detection_graph.get_tensor_by_name('detection_scores:0')
             # Extract detection classes.
             classes = detection_graph.get_tensor_by_name('detection_classes:0')
-            # Extract number of detectionsd.
+            # Extract number of detections.
             num_detections = detection_graph.get_tensor_by_name(
                 'num_detections:0'
             )
@@ -80,19 +86,40 @@ with detection_graph.as_default():
                 feed_dict={image_tensor: image_np_expanded}
             )
             # Visualization of the results of a detection.
-            vis_util.visualize_boxes_and_labels_on_image_array(
-                image_np,
-                np.squeeze(boxes),
-                np.squeeze(classes).astype(np.int32),
-                np.squeeze(scores),
-                category_index,
-                use_normalized_coordinates=True,
-                line_thickness=8
-            )
+            # vis_util.visualize_boxes_and_labels_on_image_array(
+            #     image_np,
+            #     np.squeeze(boxes),
+            #     np.squeeze(classes).astype(np.int32),
+            #     np.squeeze(scores),
+            #     category_index,
+            #     use_normalized_coordinates=True,
+            #     line_thickness=8
+            # )
+
+            max_score = np.max(np.squeeze(scores))
+            max_index = np.argmax(np.squeeze(scores))
+
+            cls_id = np.squeeze(classes).astype(np.int32)[max_index]
+            cls_name = category_index[cls_id]['name']
+
+            if max_score > THRESHOLD:
+                print(
+                    f'Max score at element '
+                    f'{max_index} = {max_score:.2f}, '
+                    f'has a class {cls_name}'
+                )
+
+                payload = {
+                    'entity': 'gesture',
+                    'label': cls_name
+                }
+                r = requests.get('http://127.0.0.1:8080/detect', params=payload)
 
             # Display output.
-            cv2.imshow('object detection', cv2.resize(image_np, (800, 600)))
+            # cv2.imshow('object detection', cv2.resize(image_np, (800, 600)))
+            #
+            # if cv2.waitKey(25) & 0xFF == ord('q'):
+            #     cv2.destroyAllWindows()
+            #     break
 
-            if cv2.waitKey(25) & 0xFF == ord('q'):
-                cv2.destroyAllWindows()
-                break
+            time.sleep(SLEEP_TIME)
