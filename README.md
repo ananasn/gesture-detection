@@ -119,7 +119,7 @@ protoc object_detection/protos/*.proto --python_out=.
 
 5. Установить пакет `object_detection`.
 
-Перейти в директорию `models\research\object_detection` и выполнить команду `pip install .`
+Перейти в директорию `models\research` и выполнить команду `pip install .`
 
 6. Добвить пакет `slim` в `PYTHONPATH`. В `~\.bashrc` добавить следующие строки, перезапустить сессию (сделать logout или закрыть эмулятор терминала).
 
